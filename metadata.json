@@ -1,0 +1,6 @@
+{
+  "name": "HS Market Makers — Professional XAUUSD Signals",
+  "description": "Join HS Market Makers for high-accuracy XAUUSD signals, professional market guidance and a growing community of profitable traders.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
