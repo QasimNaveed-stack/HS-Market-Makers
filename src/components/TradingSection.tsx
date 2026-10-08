@@ -4,7 +4,11 @@ import { MessageCircle } from 'lucide-react';
 
 export const TradingSection: React.FC = () => {
   return (
-    <section className="bg-[#050505] py-14 md:py-24 px-4 sm:px-6 relative overflow-hidden">
+    <section className="bg-[#070709] py-14 md:py-24 px-4 sm:px-6 relative overflow-hidden">
+      {/* Background ambient lighting */}
+      <div className="absolute w-[350px] h-[350px] bg-[#D4AF37]/10 blur-[150px] rounded-full top-10 right-0 pointer-events-none" />
+      <div className="absolute w-[300px] h-[300px] bg-[#DC2626]/10 blur-[130px] rounded-full bottom-0 left-0 pointer-events-none" />
+
       <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-10 md:gap-16 items-center">
         {/* Left Column: Heading & Description */}
         <div className="text-center lg:text-left flex flex-col items-center lg:items-start">
@@ -13,9 +17,10 @@ export const TradingSection: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.3 }}
-            className="text-green-500 font-semibold uppercase tracking-wider text-[11px] sm:text-sm"
+            className="text-[#D4AF37] font-semibold uppercase tracking-wider text-[11px] sm:text-sm flex items-center gap-2"
           >
-            Step Ahead. Trade Smart.
+            <span className="w-1.5 h-1.5 rounded-full bg-[#DC2626]" />
+            <span>Step Ahead • Trade Smart</span>
           </motion.p>
 
           <motion.h2
@@ -23,10 +28,10 @@ export const TradingSection: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.3, delay: 0.1 }}
-            className="text-white text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mt-3 leading-tight"
+            className="text-white text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mt-3 leading-tight tracking-tight"
           >
             Make Smarter Trades
-            <span className="block text-[#D4AF37]">With The Right Guidance</span>
+            <span className="block gold-text-gradient">With Institutional Guidance</span>
           </motion.h2>
 
           <motion.p
@@ -34,9 +39,9 @@ export const TradingSection: React.FC = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.3, delay: 0.2 }}
-            className="text-gray-400 mt-4 sm:mt-6 text-sm sm:text-base leading-relaxed max-w-lg"
+            className="text-gray-300 mt-4 sm:mt-6 text-sm sm:text-base leading-relaxed max-w-lg"
           >
-            Stay updated with valuable market insights, trading opportunities, educational content, and real-time updates directly through our WhatsApp Channel.
+            Stay updated with institutional market structure, high-impact session timings, educational chart breakdowns, and real-time setup discussions directly through our WhatsApp community.
           </motion.p>
 
           <motion.div
@@ -50,15 +55,15 @@ export const TradingSection: React.FC = () => {
               href="https://whatsapp.com/channel/0029Vb9HcH6AojYo2LADCd0E"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center justify-center gap-2 bg-green-500 text-black font-bold px-8 py-4 rounded-full hover:scale-105 hover:shadow-[0_0_35px_rgba(34,197,94,0.6)] transition-all duration-300 text-base"
+              className="inline-flex items-center justify-center gap-2.5 bg-green-500 hover:bg-green-400 text-black font-extrabold px-8 py-4 rounded-full hover:scale-105 shadow-[0_0_30px_rgba(34,197,94,0.5)] hover:shadow-[0_0_40px_rgba(34,197,94,0.75)] transition-all duration-300 text-base cursor-pointer"
             >
-              <MessageCircle className="w-5 h-5 fill-current" />
+              <MessageCircle className="w-5 h-5 fill-black" />
               <span>Join WhatsApp Community</span>
             </a>
           </motion.div>
         </div>
 
-        {/* Right Column: User-Provided Signal Image (download.png) */}
+        {/* Right Column: Key Level Chart Signal */}
         <motion.div
           initial={{ opacity: 0, x: 40 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -69,18 +74,18 @@ export const TradingSection: React.FC = () => {
           <motion.div
             animate={{ y: [0, -10, 0] }}
             transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-            className="relative w-full max-w-[280px] sm:max-w-[340px] md:max-w-[380px]"
+            className="relative w-full max-w-[280px] sm:max-w-[340px] md:max-w-[390px]"
           >
-            {/* Ambient Radial Golden Glow */}
+            {/* Ambient Radial Golden & Ruby Glow */}
             <div
-              className="absolute inset-0 rounded-3xl blur-2xl opacity-35 scale-95 pointer-events-none"
+              className="absolute inset-0 rounded-3xl blur-2xl opacity-40 scale-95 pointer-events-none"
               style={{
-                background: 'radial-gradient(ellipse at center, #D4AF37 0%, transparent 70%)'
+                background: 'radial-gradient(ellipse at center, rgba(212,175,55,0.4) 0%, rgba(220,38,38,0.2) 60%, transparent 75%)'
               }}
             />
 
-            {/* The User-Provided Signal Image (download.png / chart-signal.png) */}
-            <div className="relative z-10 p-1.5 sm:p-2 rounded-2xl sm:rounded-3xl border border-[#D4AF37]/50 bg-black/80 shadow-[0_0_35px_rgba(212,175,55,0.25)] backdrop-blur-md">
+            {/* The Chart Image Card */}
+            <div className="relative z-10 p-1.5 sm:p-2 rounded-2xl sm:rounded-3xl border border-[#D4AF37]/50 bg-[#0E0F14]/90 shadow-[0_0_40px_rgba(212,175,55,0.3)] backdrop-blur-md">
               <img
                 src="/chart-signal.png"
                 alt="HS Market Makers XAUUSD 1M Key Level Trading Chart"
@@ -89,28 +94,28 @@ export const TradingSection: React.FC = () => {
               />
             </div>
 
-            {/* Floating Live Signal Badge */}
+            {/* Floating Live Signal Badge with Ruby & Gold Accent */}
             <motion.div
               animate={{ y: [0, -4, 0] }}
               transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute top-4 left-3 z-20 bg-black/90 border border-green-500/50 rounded-xl px-2.5 py-1.5 flex items-center gap-1.5 shadow-[0_0_12px_rgba(34,197,94,0.35)] backdrop-blur-xs"
+              className="absolute top-4 left-3 z-20 bg-[#070709]/95 border border-[#DC2626]/60 rounded-xl px-2.5 py-1.5 flex items-center gap-1.5 shadow-[0_0_15px_rgba(220,38,38,0.35)] backdrop-blur-sm"
             >
-              <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse shrink-0" />
-              <span className="text-green-400 text-[10px] sm:text-xs font-bold whitespace-nowrap">
+              <span className="w-2 h-2 rounded-full bg-[#EF4444] animate-pulse shrink-0" />
+              <span className="text-[#F8FAFC] text-[10px] sm:text-xs font-bold whitespace-nowrap">
                 XAUUSD 1M Sniper
               </span>
             </motion.div>
 
-            {/* Floating Key Level Hit Badge */}
+            {/* Floating Key Level Hit Badge with Gold Accent */}
             <motion.div
               animate={{ y: [0, -4, 0] }}
               transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-              className="absolute bottom-4 right-3 z-20 bg-black/90 border border-[#D4AF37]/50 rounded-xl px-2.5 py-1.5 shadow-[0_0_12px_rgba(212,175,55,0.35)] backdrop-blur-xs"
+              className="absolute bottom-4 right-3 z-20 bg-[#070709]/95 border border-[#D4AF37]/60 rounded-xl px-2.5 py-1.5 shadow-[0_0_15px_rgba(212,175,55,0.35)] backdrop-blur-sm"
             >
               <p className="text-[#D4AF37] text-[11px] sm:text-xs font-extrabold leading-tight">
                 Key Level Smashed
               </p>
-              <p className="text-gray-400 text-[9px] sm:text-[10px] leading-tight">
+              <p className="text-gray-300 text-[9px] sm:text-[10px] leading-tight font-medium">
                 +150 Pips Rally 🚀
               </p>
             </motion.div>

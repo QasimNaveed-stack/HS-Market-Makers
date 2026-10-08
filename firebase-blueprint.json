@@ -1,0 +1,129 @@
+{
+  "entities": {
+    "Review": {
+      "title": "Review",
+      "description": "Public community submitted review for HS Market Makers (no PII)",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "UID of the authenticated author",
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "maxLength": 128
+        },
+        "authorName": {
+          "type": "string",
+          "description": "Display name of the author",
+          "maxLength": 100
+        },
+        "authorPhoto": {
+          "type": "string",
+          "description": "Avatar photo URL of the author",
+          "maxLength": 500
+        },
+        "rating": {
+          "type": "number",
+          "description": "Star rating between 1 and 5"
+        },
+        "profit": {
+          "type": "string",
+          "description": "User reported outcome or return metric (e.g. +$185 Profit)",
+          "maxLength": 60
+        },
+        "pair": {
+          "type": "string",
+          "description": "Trading pair evaluated (e.g. XAU/USD)",
+          "maxLength": 40
+        },
+        "content": {
+          "type": "string",
+          "description": "Feedback or review testimony text",
+          "maxLength": 1000,
+          "minLength": 5
+        },
+        "color": {
+          "type": "string",
+          "description": "Avatar accent color hex code",
+          "maxLength": 20
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Server timestamp when review was created"
+        }
+      },
+      "required": ["userId", "authorName", "rating", "content", "createdAt"]
+    },
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Private user account profile storing email and internal data isolated from public reads",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "Private email address of the authenticated user",
+          "maxLength": 150
+        },
+        "displayName": {
+          "type": "string",
+          "description": "User display name",
+          "maxLength": 100
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp of profile sync"
+        }
+      },
+      "required": ["email", "updatedAt"]
+    },
+    "Report": {
+      "title": "Report",
+      "description": "Moderation report for flagged reviews submitted to administrators",
+      "type": "object",
+      "properties": {
+        "reviewId": {
+          "type": "string",
+          "description": "Target review document ID",
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "maxLength": 128
+        },
+        "reporterId": {
+          "type": "string",
+          "description": "UID of the reporting user",
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "maxLength": 128
+        },
+        "reason": {
+          "type": "string",
+          "description": "Reason for flagging the review",
+          "maxLength": 500,
+          "minLength": 3
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Server timestamp when report was filed"
+        }
+      },
+      "required": ["reviewId", "reporterId", "reason", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/reviews/{reviewId}": {
+      "schema": {
+        "$ref": "#/entities/Review"
+      },
+      "description": "Public community trader reviews and ratings for HS Market Makers"
+    },
+    "/users/{userId}": {
+      "schema": {
+        "$ref": "#/entities/UserProfile"
+      },
+      "description": "Private profile document accessible only by the account owner"
+    },
+    "/reports/{reportId}": {
+      "schema": {
+        "$ref": "#/entities/Report"
+      },
+      "description": "Moderation reports accessible only via Firebase Console"
+    }
+  }
+}

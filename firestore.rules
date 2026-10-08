@@ -1,0 +1,113 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Safety Net: Default deny all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Validation for public reviews: Strictly excludes authorEmail and shadow fields
+    function isValidReview(data) {
+      return data.keys().hasAll(['userId', 'authorName', 'rating', 'content', 'createdAt'])
+        && data.keys().hasOnly(['userId', 'authorName', 'authorPhoto', 'rating', 'profit', 'pair', 'content', 'color', 'createdAt'])
+        && data.userId is string && data.userId.size() <= 128 && data.userId.matches('^[a-zA-Z0-9_\\-]+$')
+        && data.authorName is string && data.authorName.size() >= 1 && data.authorName.size() <= 100
+        && (!('authorPhoto' in data) || (data.authorPhoto is string && data.authorPhoto.size() <= 500))
+        && data.rating is int && data.rating >= 1 && data.rating <= 5
+        && (!('profit' in data) || (data.profit is string && data.profit.size() <= 60))
+        && (!('pair' in data) || (data.pair is string && data.pair.size() <= 40))
+        && data.content is string && data.content.size() >= 5 && data.content.size() <= 1000
+        && data.content.matches('.*[^\\s].*')
+        && (!('color' in data) || (data.color is string && data.color.size() <= 20))
+        && data.createdAt is timestamp;
+    }
+
+    // Validation for private user profile: Strictly forbids role escalation (admin, role, staff, etc.)
+    function isValidUserProfile(data) {
+      return data.keys().hasAll(['email', 'updatedAt'])
+        && data.keys().hasOnly(['email', 'displayName', 'updatedAt'])
+        && data.email is string && data.email.size() <= 150
+        && (!('displayName' in data) || (data.displayName is string && data.displayName.size() <= 100))
+        && data.updatedAt is timestamp;
+    }
+
+    // Validation for moderation reports
+    function isValidReport(data) {
+      return data.keys().hasAll(['reviewId', 'reporterId', 'reason', 'createdAt'])
+        && data.keys().hasOnly(['reviewId', 'reporterId', 'reason', 'createdAt'])
+        && data.reviewId is string && data.reviewId.size() <= 128 && data.reviewId.matches('^[a-zA-Z0-9_\\-]+$')
+        && data.reporterId is string && data.reporterId.size() <= 128 && data.reporterId.matches('^[a-zA-Z0-9_\\-]+$')
+        && data.reason is string && data.reason.size() >= 3 && data.reason.size() <= 500
+        && data.createdAt is timestamp;
+    }
+
+    // Reviews collection: Public community reviews (no PII/email)
+    match /reviews/{reviewId} {
+      // Public reviews can be viewed by all website visitors
+      allow get, list: if true;
+
+      // Only authenticated users can publish a review under their own verified UID
+      allow create: if isValidId(reviewId)
+        && isSignedIn()
+        && incoming().userId == request.auth.uid
+        && incoming().createdAt == request.time
+        && isValidReview(incoming());
+
+      // Reviews are immutable once published to prevent post-submission tampering
+      allow update: if false;
+
+      // Only the author can delete their own review
+      allow delete: if isValidId(reviewId)
+        && isSignedIn()
+        && existing().userId == request.auth.uid;
+    }
+
+    // Private User Profiles: Isolates user email; rejects arbitrary roles or privilege escalation
+    match /users/{userId} {
+      // Only the authenticated account owner can read their own profile
+      allow read: if isValidId(userId)
+        && isSignedIn()
+        && request.auth.uid == userId;
+
+      // Users can only write legitimate profile fields; cannot self-grant admin or moderator roles
+      allow create, update: if isValidId(userId)
+        && isSignedIn()
+        && request.auth.uid == userId
+        && incoming().updatedAt == request.time
+        && isValidUserProfile(incoming());
+
+      // User profiles cannot be deleted by client requests
+      allow delete: if false;
+    }
+
+    // Moderation Reports collection: Authenticated users can submit reports for review
+    match /reports/{reportId} {
+      // Normal users cannot read, list, update, or delete reports (moderation via Firebase Console)
+      allow read, update, delete: if false;
+
+      allow create: if isValidId(reportId)
+        && isSignedIn()
+        && incoming().reporterId == request.auth.uid
+        && incoming().createdAt == request.time
+        && isValidReport(incoming());
+    }
+  }
+}
