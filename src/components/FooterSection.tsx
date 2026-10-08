@@ -127,9 +127,16 @@ export const FooterSection: React.FC = () => {
                 <h4 className="text-white text-sm sm:text-base font-extrabold">HS Market Makers</h4>
                 <p className="text-[#D4AF37] mt-0.5 text-xs font-semibold">Trade With Purpose</p>
               </div>
-              <p className="text-gray-400 text-xs text-center">
-                &copy; 2026 HS Market Makers. All Rights Reserved.
-              </p>
+              <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs text-gray-400">
+                <a
+                  href="/privacy"
+                  className="hover:text-[#D4AF37] text-gray-400 transition-colors underline-offset-4 hover:underline"
+                >
+                  Privacy Policy
+                </a>
+                <span className="text-gray-600">•</span>
+                <span>&copy; 2026 HS Market Makers. All Rights Reserved.</span>
+              </div>
             </div>
           </div>
         </div>
